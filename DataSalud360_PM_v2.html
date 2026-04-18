@@ -142,6 +142,9 @@ tr.done-row .tn{text-decoration:line-through;color:var(--dim)}
   <div class="sb-stat"><div class="lbl">Valor total</div><div class="val">$1.487M</div></div>
   <div class="sb-stat"><div class="lbl">Días restantes</div><div class="val" id="sb-days">—</div></div>
   <div class="sb-stat"><div class="lbl">Guardado</div><div class="val" id="sb-saved" style="font-size:.65rem">—</div></div>
+  <div style="padding:12px 18px;margin-top:4px">
+    <button class="btn btn-o" style="width:100%;font-size:.72rem;justify-content:center" onclick="openM('m-backup')">🔄 Exportar / Importar</button>
+  </div>
 </nav>
 <main class="main">
 
@@ -408,6 +411,31 @@ tr.done-row .tn{text-decoration:line-through;color:var(--dim)}
 
 <div class="toast-wrap" id="toasts"></div>
 
+<div class="overlay" id="m-backup">
+  <div class="modal" style="max-width:520px">
+    <div class="mhd"><h3>🔄 Exportar / Importar Datos</h3><button class="btn btn-o btn-xs" onclick="closeM('m-backup')">✕</button></div>
+    <div class="mbody">
+      <div class="alrt ai" style="margin-bottom:16px">Tu información se guarda en este navegador. Usa estas opciones para hacer copias de seguridad o trasladar tus datos a otro dispositivo.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:var(--sur);border:1px solid var(--bord);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-size:2rem;margin-bottom:8px">📤</div>
+          <div style="font-weight:600;font-size:.85rem;margin-bottom:6px;color:#fff">Exportar</div>
+          <div style="font-size:.75rem;color:var(--dim);margin-bottom:12px">Descarga un archivo JSON con todas tus tareas, informes, documentos y facturas</div>
+          <button class="btn btn-p" style="width:100%" onclick="exportData()">Exportar todo</button>
+        </div>
+        <div style="background:var(--sur);border:1px solid var(--bord);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-size:2rem;margin-bottom:8px">📥</div>
+          <div style="font-weight:600;font-size:.85rem;margin-bottom:6px;color:#fff">Importar</div>
+          <div style="font-size:.75rem;color:var(--dim);margin-bottom:12px">Carga un backup anterior. Reemplaza los datos actuales del panel</div>
+          <button class="btn btn-o" style="width:100%" onclick="document.getElementById('fi-backup').click()">Seleccionar backup</button>
+          <input type="file" id="fi-backup" accept=".json" style="display:none" onchange="importData(this)">
+        </div>
+      </div>
+    </div>
+    <div class="mft"><button class="btn btn-o" onclick="closeM('m-backup')">Cerrar</button></div>
+  </div>
+</div>
+
 <script>
 // ─── HELPERS ───
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -424,7 +452,9 @@ function openM(id){
   if(id==='m-doc'){
     pendDocFile=null;
     var prev=document.getElementById('doc-preview');if(prev)prev.innerHTML='';
-    var savBtn=document.querySelector('#m-doc .mft .btn-p');if(savBtn)savBtn.disabled=false;
+    var nd=document.getElementById('d-nombre');if(nd)nd.value='';
+    var nr=document.getElementById('d-rel');if(nr)nr.value='';
+    var fi=document.getElementById('fi-doc');if(fi)fi.value='';
   }
   if(id==='m-upload'){
     pendUploadFile=null;
@@ -1011,26 +1041,37 @@ function previewDoc(input){
   var f=input.files[0];if(!f)return;
   pendDocFile=null;
   var prev=document.getElementById('doc-preview');
-  prev.innerHTML='<span style="color:var(--tl);font-size:.78rem">⏳ Cargando '+esc(f.name)+'...</span>';
-  var savBtn=document.querySelector('#m-doc .mft .btn-p');
-  if(savBtn)savBtn.disabled=true;
+  if(prev)prev.innerHTML='<span style="color:var(--tl);font-size:.78rem">⏳ Leyendo '+esc(f.name)+'...</span>';
   var r=new FileReader();
   r.onload=function(e){
     pendDocFile={name:f.name,size:f.size,type:f.type,data:e.target.result};
-    prev.innerHTML='<span class="fchip">📎 '+esc(f.name)+' ('+Math.round(f.size/1024)+'KB) <span style="color:#34d399">✓ listo</span></span>';
-    if(!document.getElementById('d-nombre').value.trim())document.getElementById('d-nombre').value=f.name;
-    if(savBtn)savBtn.disabled=false;
+    if(prev)prev.innerHTML='<span class="fchip" style="background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.4)">✅ '+esc(f.name)+' ('+Math.round(f.size/1024)+'KB) — listo para guardar</span>';
+    var nd=document.getElementById('d-nombre');
+    if(nd&&!nd.value.trim())nd.value=f.name;
   };
-  r.onerror=function(){prev.innerHTML='<span style="color:#fb7185;font-size:.78rem">⚠ Error leyendo archivo</span>';if(savBtn)savBtn.disabled=false;};
+  r.onerror=function(){
+    pendDocFile=null;
+    if(prev)prev.innerHTML='<span style="color:#fb7185;font-size:.78rem">⚠ Error leyendo el archivo. Intenta de nuevo.</span>';
+  };
   r.readAsDataURL(f);
 }
 function saveDoc(){
-  var nombre=document.getElementById('d-nombre').value.trim()||(pendDocFile?pendDocFile.name:'');
-  if(!pendDocFile){toast('⚠ El archivo aún se está cargando o no fue seleccionado. Espera un momento y vuelve a intentar.','terr');return;}
-  if(!nombre){toast('⚠ Ingresa un nombre para el documento','terr');return;}
+  var nombre=document.getElementById('d-nombre').value.trim();
+  if(!pendDocFile){
+    // Maybe user clicked save before FileReader finished — wait and retry once
+    var fi=document.getElementById('fi-doc');
+    if(fi&&fi.files&&fi.files.length){
+      toast('⏳ El archivo se está cargando, intenta en un segundo...','tinf');
+      setTimeout(saveDoc,1200);
+      return;
+    }
+    toast('⚠ Selecciona un archivo primero','terr');return;
+  }
+  if(!nombre)nombre=pendDocFile.name;
   docs.push({id:Date.now(),nombre:nombre,cat:document.getElementById('d-cat').value,rel:document.getElementById('d-rel').value,fecha:new Date().toLocaleDateString('es-CO'),size:pendDocFile.size,data:pendDocFile.data});
-  pendDocFile=null;saveAll();closeM('m-doc');renderDocs();toast('📁 Documento guardado','tok');
-  document.getElementById('doc-preview').innerHTML='';document.getElementById('d-nombre').value='';document.getElementById('d-rel').value='';
+  pendDocFile=null;
+  var fi=document.getElementById('fi-doc');if(fi)fi.value='';
+  saveAll();closeM('m-doc');renderDocs();toast('📁 Documento guardado','tok');
 }
 function setDocFilter(f,el){docFilter=f;document.querySelectorAll('#dfilt button').forEach(function(b){b.classList.remove('active');});el.classList.add('active');renderDocs();}
 function renderDocs(){
@@ -1054,6 +1095,39 @@ function renderDocs(){
 }
 function delDoc(id){if(!confirm('¿Eliminar documento?'))return;docs=docs.filter(function(d){return d.id!==id;});saveAll();renderDocs();toast('Eliminado','terr');}
 function dlFile(data,name){if(!data||!name)return;var a=document.createElement('a');a.href=data;a.download=name;a.click();}
+
+// ─── EXPORT / IMPORT DATA ───
+function exportData(){
+  var data={tasks:tasks,hitos:hitos,facturas:facturas,informes:informes,docs:docs,exported:new Date().toISOString()};
+  var json=JSON.stringify(data,null,2);
+  var a=document.createElement('a');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(json);
+  a.download='DataSalud360_Backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  toast('📤 Datos exportados correctamente','tok');
+}
+function importData(input){
+  var f=input.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    try{
+      var data=JSON.parse(e.target.result);
+      if(!data.tasks){toast('⚠ Archivo inválido — no contiene datos del panel','terr');return;}
+      if(!confirm('¿Importar datos? Esto reemplazará toda la información actual del panel.'))return;
+      if(data.tasks)tasks=data.tasks;
+      if(data.hitos)hitos=data.hitos;
+      if(data.facturas)facturas=data.facturas;
+      if(data.informes)informes=data.informes;
+      if(data.docs)docs=data.docs;
+      saveAll();
+      closeM('m-backup');
+      nav('dashboard');
+      toast('📥 Datos importados correctamente — '+tasks.length+' tareas cargadas','tok');
+    }catch(err){toast('⚠ Error al leer el archivo: '+err.message,'terr');}
+  };
+  r.readAsText(f,'UTF-8');
+  input.value='';
+}
 
 // ─── INIT ───
 window.addEventListener('DOMContentLoaded',function(){
