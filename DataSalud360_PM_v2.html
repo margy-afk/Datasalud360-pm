@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataSalud360 · Gestión CTO 304-2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0d9488;--tl:#5eead4;--td:#0a6c63;--navy:#080f1a;--slate:#111e2e;--card:#0d1c2c;--sur:#091522;--bord:#1a3040;--gold:#f59e0b;--rose:#f43f5e;--green:#10b981;--blue:#3b82f6;--text:#dff0ee;--dim:#6b8e9e;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 5% 10%,rgba(13,148,136,.12) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 95% 90%,rgba(10,108,99,.15) 0%,transparent 55%);pointer-events:none;z-index:0}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh;position:relative;z-index:1}
+@media(max-width:900px){.app{grid-template-columns:1fr}}
+.sidebar{background:var(--sur);border-right:1px solid var(--bord);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto;z-index:10}
+@media(max-width:900px){.sidebar{display:none}}
+.sb-logo{padding:0 18px 20px;border-bottom:1px solid var(--bord);margin-bottom:14px}
+.sb-logo h2{font-family:'DM Serif Display',serif;font-size:1.1rem;color:#fff;line-height:1.2}
+.sb-logo small{font-size:.65rem;color:var(--tl);letter-spacing:.1em;text-transform:uppercase}
+.sb-nav a{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:.8rem;color:var(--dim);cursor:pointer;transition:all .15s;text-decoration:none;border-left:2px solid transparent}
+.sb-nav a:hover,.sb-nav a.active{color:var(--tl);background:rgba(13,148,136,.08);border-left-color:var(--teal)}
+.sb-sep{margin:10px 18px;border-top:1px solid var(--bord)}
+.sb-stat{padding:10px 18px;font-size:.72rem}
+.sb-stat .lbl{color:var(--dim);margin-bottom:2px}
+.sb-stat .val{font-family:'JetBrains Mono',monospace;color:var(--tl);font-size:.85rem}
+.main{padding:28px 28px 80px;overflow-y:auto}
+@media(max-width:640px){.main{padding:16px 14px 80px}}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px}
+.topbar h1{font-family:'DM Serif Display',serif;font-size:1.6rem;color:#fff}
+.topbar h1 span{color:var(--tl)}
+.topbar-r{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;transition:all .2s}
+.btn-p{background:var(--teal);color:#fff}.btn-p:hover{background:var(--td)}
+.btn-g{background:rgba(245,158,11,.13);color:var(--gold);border:1px solid rgba(245,158,11,.3)}.btn-g:hover{background:rgba(245,158,11,.23)}
+.btn-o{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--bord)}.btn-o:hover{background:rgba(255,255,255,.08)}
+.btn-d{background:rgba(244,63,94,.1);color:#fb7185;border:1px solid rgba(244,63,94,.25)}.btn-d:hover{background:rgba(244,63,94,.2)}
+.btn-sm{padding:6px 12px;font-size:.73rem}
+.btn-xs{padding:3px 8px;font-size:.68rem;border-radius:5px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:28px}
+.kpi{background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:16px 14px;position:relative;overflow:hidden;transition:transform .2s}
+.kpi:hover{transform:translateY(-2px)}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0}
+.kpi.ct::after{background:linear-gradient(90deg,var(--teal),var(--tl))}
+.kpi.cg::after{background:linear-gradient(90deg,var(--gold),#fcd34d)}
+.kpi.cn::after{background:linear-gradient(90deg,var(--green),#34d399)}
+.kpi.cr::after{background:linear-gradient(90deg,var(--rose),#fb7185)}
+.kpi.cb::after{background:linear-gradient(90deg,var(--blue),#93c5fd)}
+.kpi-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:6px}
+.kpi-val{font-family:'DM Serif Display',serif;font-size:1.7rem;color:#fff;line-height:1}
+.kpi-sub{font-size:.68rem;color:var(--dim);margin-top:4px}
+.sec{margin-bottom:32px}
+.sec-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.sec-hd h2{font-size:.95rem;color:var(--tl);font-weight:600;display:flex;align-items:center;gap:8px}
+.panel{background:var(--card);border:1px solid var(--bord);border-radius:14px;overflow:hidden}
+.twrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th{text-align:left;padding:10px 12px;color:var(--dim);font-weight:500;background:rgba(255,255,255,.02);border-bottom:1px solid var(--bord);font-size:.67rem;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid rgba(26,48,64,.5);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(13,148,136,.04)}
+tr.done-row td{opacity:.5}
+tr.done-row .tn{text-decoration:line-through;color:var(--dim)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-size:.67rem;font-weight:500;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.bok{background:rgba(16,185,129,.13);color:#34d399}
+.bw{background:rgba(245,158,11,.13);color:#fcd34d}
+.bp{background:rgba(107,142,158,.13);color:#94a3b8}
+.bc{background:rgba(244,63,94,.13);color:#fb7185}
+.bb{background:rgba(59,130,246,.13);color:#93c5fd}
+.bd{background:rgba(16,185,129,.08);color:#6ee7b7}
+.pbar{height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;min-width:60px}
+.pfill{height:100%;border-radius:3px;transition:width .6s}
+.pft{background:linear-gradient(90deg,var(--teal),var(--tl))}
+.pfg{background:linear-gradient(90deg,var(--gold),#fcd34d)}
+.pfn{background:linear-gradient(90deg,var(--green),#34d399)}
+.pfr{background:linear-gradient(90deg,var(--rose),#fb7185)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
+.overlay.open{display:flex}
+.modal{background:var(--slate);border:1px solid var(--bord);border-radius:16px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;animation:su .25s ease}
+@keyframes su{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.mhd{display:flex;justify-content:space-between;align-items:center;padding:20px 22px 14px;border-bottom:1px solid var(--bord)}
+.mhd h3{font-family:'DM Serif Display',serif;color:#fff;font-size:1.1rem}
+.mbody{padding:20px 22px}
+.mft{padding:14px 22px;border-top:1px solid var(--bord);display:flex;justify-content:flex-end;gap:8px}
+.frow{margin-bottom:14px}
+.frow label{display:block;font-size:.72rem;color:var(--dim);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.frow input,.frow select,.frow textarea{width:100%;background:var(--sur);border:1px solid var(--bord);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none;transition:border .2s}
+.frow input:focus,.frow select:focus,.frow textarea:focus{border-color:var(--teal)}
+.frow textarea{min-height:80px;resize:vertical}
+.frow select option{background:var(--slate)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.fgrid{grid-template-columns:1fr}}
+.dz{border:2px dashed var(--bord);border-radius:10px;padding:22px;text-align:center;cursor:pointer;transition:all .2s}
+.dz:hover{border-color:var(--teal);background:rgba(13,148,136,.05)}
+.dz-ico{font-size:1.8rem;margin-bottom:6px;pointer-events:none}
+.dz p{font-size:.78rem;color:var(--dim);pointer-events:none}
+.dz small{font-size:.68rem;color:var(--dim);opacity:.7;pointer-events:none}
+.fchip{display:inline-flex;align-items:center;gap:5px;background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.25);border-radius:6px;padding:3px 9px;font-size:.7rem;color:var(--tl);margin:2px;cursor:pointer}
+.fchip button{background:none;border:none;color:var(--rose);cursor:pointer;padding:0;font-size:.75rem;line-height:1}
+.tnav{display:flex;gap:4px;border-bottom:1px solid var(--bord);margin-bottom:20px;overflow-x:auto;padding-bottom:1px}
+.tnav button{padding:9px 16px;border:none;background:none;color:var(--dim);font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s}
+.tnav button:hover{color:var(--text)}
+.tnav button.active{color:var(--tl);border-bottom-color:var(--teal)}
+.icard{background:var(--sur);border:1px solid var(--bord);border-radius:10px;padding:16px;margin-bottom:10px}
+.icard-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px}
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--slate);border:1px solid var(--bord);border-radius:10px;padding:12px 18px;font-size:.78rem;display:flex;align-items:center;gap:10px;animation:su .2s;min-width:220px}
+.tok{border-color:rgba(16,185,129,.4);color:#34d399}
+.terr{border-color:rgba(244,63,94,.4);color:#fb7185}
+.tinf{border-color:rgba(13,148,136,.4);color:var(--tl)}
+.de{font-family:'JetBrains Mono',monospace;font-size:.7rem;background:none;border:none;color:var(--dim);cursor:pointer;padding:2px 4px;border-radius:4px;transition:background .15s}
+.de:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.acts{display:flex;gap:4px;align-items:center}
+.prio{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.pa{background:var(--rose)}.pm{background:var(--gold)}.pb{background:var(--green)}
+.evrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(26,48,64,.4);font-size:.78rem}
+.evrow:last-child{border-bottom:none}
+.tag{display:inline-block;font-size:.65rem;padding:2px 7px;border-radius:4px;background:rgba(255,255,255,.05);color:var(--dim);margin-left:4px}
+.es{text-align:center;padding:32px;color:var(--dim);font-size:.82rem}
+.mono{font-family:'JetBrains Mono',monospace}
+.alrt{border-radius:10px;padding:12px 16px;font-size:.8rem;display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.ai{background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.25);color:var(--tl)}
+.aw{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fcd34d}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--bord);border-radius:4px}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="sidebar">
+  <div class="sb-logo"><h2>DataSalud<span style="color:var(--tl)">360</span></h2><small>CTO 304-2026</small></div>
+  <div class="sb-nav">
+    <a id="nav-dashboard" onclick="nav('dashboard')"><span>📊</span> Dashboard</a>
+    <a id="nav-tareas" onclick="nav('tareas')"><span>✅</span> Tareas</a>
+    <a id="nav-informes" onclick="nav('informes')"><span>📄</span> Informes</a>
+    <a id="nav-facturacion" onclick="nav('facturacion')"><span>💰</span> Facturación</a>
+    <a id="nav-cronograma" onclick="nav('cronograma')"><span>🗓</span> Cronograma</a>
+    <a id="nav-documentos" onclick="nav('documentos')"><span>📁</span> Documentos</a>
+  </div>
+  <div class="sb-sep"></div>
+  <div class="sb-stat"><div class="lbl">Contratista</div><div class="val" style="font-size:.7rem">Magentrack S.A.S</div></div>
+  <div class="sb-stat"><div class="lbl">Valor total</div><div class="val">$1.487M</div></div>
+  <div class="sb-stat"><div class="lbl">Días restantes</div><div class="val" id="sb-days">—</div></div>
+  <div class="sb-stat"><div class="lbl">Guardado</div><div class="val" id="sb-saved" style="font-size:.65rem">—</div></div>
+</nav>
+<main class="main">
+
+<!-- DASHBOARD -->
+<div id="pg-dashboard" class="pg">
+  <div class="topbar">
+    <div><h1>Panel de <span>Gestión</span></h1><div style="font-size:.72rem;color:var(--dim);margin-top:2px">Contrato 304-2026 · ESE Hospital Marco Fidel Suárez</div></div>
+    <div class="topbar-r">
+      <button class="btn btn-g" onclick="openM('m-upload')">📂 Cargar Datos</button>
+      <button class="btn btn-p" onclick="openM('m-task');resetTaskForm()">＋ Nueva Tarea</button>
+    </div>
+  </div>
+  <div class="kpi-row" id="kpi-row"></div>
+  <div class="sec">
+    <div class="sec-hd"><h2>📌 Tareas Pendientes / Críticas</h2><button class="btn btn-o btn-sm" onclick="nav('tareas')">Ver todas →</button></div>
+    <div class="panel"><div class="twrap"><table><thead><tr><th></th><th>Tarea</th><th>Estado</th><th>Prioridad</th><th>Fecha límite</th><th>Acciones</th></tr></thead><tbody id="db-tasks"></tbody></table></div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-hd"><h2>📈 Progreso por Área</h2></div>
+    <div class="panel" style="padding:20px" id="db-progress"></div>
+  </div>
+  <div class="sec">
+    <div class="sec-hd"><h2>📁 Documentos Recientes</h2><button class="btn btn-o btn-sm" onclick="nav('documentos')">Ver todos →</button></div>
+    <div class="panel" style="padding:16px" id="db-docs"></div>
+  </div>
+</div>
+
+<!-- TAREAS -->
+<div id="pg-tareas" class="pg" style="display:none">
+  <div class="topbar">
+    <div><h1>Gestión de <span>Tareas</span></h1></div>
+    <div class="topbar-r">
+      <button class="btn btn-o btn-sm" onclick="exportCSV()">⬇ Exportar CSV</button>
+      <button class="btn btn-p" onclick="openM('m-task');resetTaskForm()">＋ Nueva Tarea</button>
+    </div>
+  </div>
+  <div class="tnav" id="tfilt">
+    <button class="active" onclick="setFilter('all',this)">Todas</button>
+    <button onclick="setFilter('activo',this)">🟢 Activo</button>
+    <button onclick="setFilter('en proceso',this)">🟡 En Proceso</button>
+    <button onclick="setFilter('pendiente',this)">⚪ Pendiente</button>
+    <button onclick="setFilter('completada',this)">✅ Completadas</button>
+    <button onclick="setFilter('critico',this)">🔴 Crítico</button>
+  </div>
+  <div class="panel"><div class="twrap"><table><thead><tr><th></th><th>#</th><th>Tarea / Obligación</th><th>Área</th><th>Estado</th><th>Prioridad</th><th>Fecha Límite</th><th>Docs</th><th>Acciones</th></tr></thead><tbody id="all-tasks"></tbody></table></div></div>
+</div>
+
+<!-- INFORMES -->
+<div id="pg-informes" class="pg" style="display:none">
+  <div class="topbar">
+    <div><h1>Informes <span>Mensuales</span></h1></div>
+    <div class="topbar-r"><button class="btn btn-p" onclick="openM('m-informe')">＋ Nuevo Informe</button></div>
+  </div>
+  <div id="inf-list"></div>
+</div>
+
+<!-- FACTURACION -->
+<div id="pg-facturacion" class="pg" style="display:none">
+  <div class="topbar">
+    <div><h1>Control de <span>Facturación</span></h1></div>
+    <div class="topbar-r"><button class="btn btn-p" onclick="openM('m-factura')">＋ Registrar Cuota</button></div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi ct"><div class="kpi-lbl">Valor Contrato</div><div class="kpi-val" style="font-size:1.2rem">$1.487M</div><div class="kpi-sub">COP total</div></div>
+    <div class="kpi cn"><div class="kpi-lbl">Facturado</div><div class="kpi-val" id="f-total" style="font-size:1.2rem">$0</div></div>
+    <div class="kpi cg"><div class="kpi-lbl">Por Facturar</div><div class="kpi-val" id="f-pend" style="font-size:1.2rem">$1.487M</div></div>
+    <div class="kpi cr"><div class="kpi-lbl">Cuota Estimada</div><div class="kpi-val" style="font-size:1.2rem">$165M</div><div class="kpi-sub">/mes</div></div>
+  </div>
+  <div class="panel"><div class="twrap"><table><thead><tr><th>#</th><th>Período</th><th>Valor</th><th>Radicación</th><th>Pago</th><th>Estado</th><th>Nota</th><th></th></tr></thead><tbody id="fac-body"></tbody></table></div></div>
+</div>
+
+<!-- CRONOGRAMA -->
+<div id="pg-cronograma" class="pg" style="display:none">
+  <div class="topbar">
+    <div><h1>Cronograma <span>de Hitos</span></h1></div>
+    <div class="topbar-r"><button class="btn btn-p" onclick="openM('m-hito')">＋ Agregar Hito</button></div>
+  </div>
+  <div class="panel" style="padding:24px"><div id="hito-list"></div></div>
+</div>
+
+<!-- DOCUMENTOS -->
+<div id="pg-documentos" class="pg" style="display:none">
+  <div class="topbar">
+    <div><h1>Repositorio de <span>Documentos</span></h1></div>
+    <div class="topbar-r"><button class="btn btn-p" onclick="openM('m-doc')">📎 Subir Documento</button></div>
+  </div>
+  <div class="tnav" id="dfilt">
+    <button class="active" onclick="setDocFilter('all',this)">Todos</button>
+    <button onclick="setDocFilter('informe',this)">Informes</button>
+    <button onclick="setDocFilter('factura',this)">Facturas</button>
+    <button onclick="setDocFilter('soporte',this)">Soporte</button>
+    <button onclick="setDocFilter('capacitacion',this)">Capacitación</button>
+    <button onclick="setDocFilter('legal',this)">Legal</button>
+  </div>
+  <div class="panel"><div class="twrap"><table><thead><tr><th>Nombre</th><th>Categoría</th><th>Tamaño</th><th>Relacionado con</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="doc-body"></tbody></table></div></div>
+</div>
+
+</main>
+</div>
+
+<!-- MODALES -->
+<div class="overlay" id="m-task">
+  <div class="modal">
+    <div class="mhd"><h3 id="m-task-title">Nueva Tarea</h3><button class="btn btn-o btn-xs" onclick="closeM('m-task')">✕</button></div>
+    <div class="mbody">
+      <input type="hidden" id="t-id">
+      <div class="fgrid">
+        <div class="frow" style="grid-column:1/-1"><label>Nombre / Obligación</label><input id="t-name" placeholder="Descripción de la tarea..."></div>
+        <div class="frow"><label>Área</label><select id="t-area"><option>Plataforma</option><option>PM</option><option>Capacitación</option><option>Soporte</option><option>Admin</option><option>TI</option><option>Clínico</option><option>Gestores</option><option>Producto</option></select></div>
+        <div class="frow"><label>Estado</label><select id="t-estado"><option value="pendiente">Pendiente</option><option value="en proceso">En Proceso</option><option value="activo">Activo</option><option value="completada">Completada</option><option value="critico">Crítico</option></select></div>
+        <div class="frow"><label>Prioridad</label><select id="t-prio"><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select></div>
+        <div class="frow"><label>Fecha Límite</label><input type="date" id="t-fecha"></div>
+        <div class="frow" style="grid-column:1/-1"><label>Responsable</label><input id="t-resp" placeholder="Nombre del responsable"></div>
+        <div class="frow" style="grid-column:1/-1"><label>Evidencia / Entregable</label><input id="t-evid" placeholder="Ej: Acta firmada, reporte..."></div>
+        <div class="frow" style="grid-column:1/-1"><label>Notas</label><textarea id="t-notas" placeholder="Detalles adicionales..."></textarea></div>
+      </div>
+      <div class="frow">
+        <label>Adjuntar documentos de soporte</label>
+        <div class="dz" onclick="document.getElementById('fi-task').click()">
+          <div class="dz-ico">📎</div>
+          <p>Haz clic para seleccionar archivos</p>
+          <small>PDF, Word, Excel, Imágenes — Múltiples permitidos</small>
+        </div>
+        <input type="file" id="fi-task" multiple style="display:none" onchange="addTaskFiles(this)">
+        <div id="task-files" style="margin-top:8px"></div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-o" onclick="closeM('m-task')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveTask()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m-upload">
+  <div class="modal" style="max-width:660px">
+    <div class="mhd"><h3>📂 Cargar Datos del Proyecto</h3><button class="btn btn-o btn-xs" onclick="closeM('m-upload')">✕</button></div>
+    <div class="mbody">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+        <div style="background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.2);border-radius:8px;padding:10px;text-align:center;font-size:.72rem;color:var(--tl)">📄 CSV / TXT<div style="color:var(--dim);margin-top:2px">coma o punto y coma</div></div>
+        <div style="background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.2);border-radius:8px;padding:10px;text-align:center;font-size:.72rem;color:var(--tl)">📊 Excel<div style="color:var(--dim);margin-top:2px">.xlsx · .xls</div></div>
+        <div style="background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.2);border-radius:8px;padding:10px;text-align:center;font-size:.72rem;color:var(--tl)">📋 JSON / Word<div style="color:var(--dim);margin-top:2px">.json · .docx · .txt</div></div>
+      </div>
+      <div class="alrt ai" style="font-size:.74rem">Columnas requeridas (cualquier formato): <strong>nombre</strong> · opcionales: area, estado, prioridad, fecha_limite, responsable, evidencia, notas</div>
+      <div class="dz" id="upload-dz" onclick="document.getElementById('fi-data').click()" ondragover="dzDrag(event,true)" ondragleave="dzDrag(event,false)" ondrop="dzDrop(event)">
+        <div class="dz-ico" id="dz-ico">📂</div>
+        <p id="dz-txt">Arrastra cualquier archivo aquí o <span style="color:var(--tl);text-decoration:underline">haz clic para seleccionar</span></p>
+        <small>CSV, Excel (.xlsx/.xls), JSON, Word (.docx), TXT</small>
+      </div>
+      <input type="file" id="fi-data" accept=".csv,.xlsx,.xls,.json,.txt,.docx" style="display:none" onchange="previewUpload(this)">
+      <div id="csv-result" style="margin-top:12px"></div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-o btn-sm" onclick="dlPlantilla('csv')">⬇ Plantilla CSV</button>
+        <button class="btn btn-o btn-sm" onclick="dlPlantilla('json')">⬇ Plantilla JSON</button>
+      </div>
+    </div>
+    <div class="mft"><button class="btn btn-o" onclick="closeM('m-upload')">Cerrar</button><button class="btn btn-p" id="btn-procesar" onclick="procesarArchivo()" disabled>📊 Procesar e Importar</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-informe">
+  <div class="modal" style="max-width:680px">
+    <div class="mhd"><h3>📄 Nuevo Informe Mensual</h3><button class="btn btn-o btn-xs" onclick="closeM('m-informe')">✕</button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="frow"><label>Período</label><input type="month" id="i-mes"></div>
+        <div class="frow"><label>N° Informe</label><input type="number" id="i-num" min="1" max="9"></div>
+        <div class="frow"><label>Fecha Radicación</label><input type="date" id="i-fecha"></div>
+        <div class="frow"><label>Estado</label><select id="i-estado"><option value="borrador">Borrador</option><option value="pendiente">Pendiente firma</option><option value="radicado">Radicado</option><option value="aprobado">Aprobado/Pagado</option></select></div>
+        <div class="frow" style="grid-column:1/-1"><label>Valor Cuota ($)</label><input type="number" id="i-valor" placeholder="165261000"></div>
+        <div class="frow" style="grid-column:1/-1"><label>Resumen de actividades</label><textarea id="i-resumen" placeholder="Actividades ejecutadas, usuarios activos, capacitaciones, soporte..."></textarea></div>
+      </div>
+      <div class="frow"><label>Indicadores del período</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <input id="i-gest" placeholder="N° gestantes activas">
+          <input id="i-alert" placeholder="N° alertas generadas">
+          <input id="i-gest2" placeholder="Alertas gestionadas (%)">
+          <input id="i-usua" placeholder="Usuarios activos">
+          <input id="i-cap" placeholder="Horas capacitación">
+          <input id="i-tick" placeholder="Tickets soporte resueltos">
+        </div>
+      </div>
+      <div class="frow">
+        <label>Adjuntar documentos</label>
+        <div class="dz" onclick="document.getElementById('fi-inf').click()">
+          <div class="dz-ico">📋</div>
+          <p>Informe PDF, listas asistencia, capturas, paz y salvo...</p>
+        </div>
+        <input type="file" id="fi-inf" multiple style="display:none" onchange="addInfFiles(this)">
+        <div id="inf-files" style="margin-top:8px"></div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-o" onclick="closeM('m-informe')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveInforme()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m-hito">
+  <div class="modal">
+    <div class="mhd"><h3>🗓 Agregar Hito</h3><button class="btn btn-o btn-xs" onclick="closeM('m-hito')">✕</button></div>
+    <div class="mbody">
+      <div class="frow"><label>Nombre del Hito</label><input id="h-nombre" placeholder="Ej: Activación 132 licencias IPS"></div>
+      <div class="fgrid">
+        <div class="frow"><label>Fecha</label><input type="date" id="h-fecha"></div>
+        <div class="frow"><label>Estado</label><select id="h-estado"><option value="pendiente">Pendiente</option><option value="en proceso">En Proceso</option><option value="completado">Completado</option></select></div>
+      </div>
+      <div class="frow"><label>Descripción</label><textarea id="h-desc" placeholder="Detalle del hito..."></textarea></div>
+      <div class="frow"><label>Responsable</label><input id="h-resp" placeholder="Área o persona responsable"></div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-o" onclick="closeM('m-hito')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveHito()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m-doc">
+  <div class="modal">
+    <div class="mhd"><h3>📎 Subir Documento</h3><button class="btn btn-o btn-xs" onclick="closeM('m-doc')">✕</button></div>
+    <div class="mbody">
+      <div class="frow"><label>Nombre del Documento</label><input id="d-nombre" placeholder="Nombre descriptivo..."></div>
+      <div class="fgrid">
+        <div class="frow"><label>Categoría</label><select id="d-cat"><option value="informe">Informe</option><option value="factura">Factura</option><option value="soporte">Soporte técnico</option><option value="capacitacion">Capacitación</option><option value="legal">Legal / Contractual</option><option value="otro">Otro</option></select></div>
+        <div class="frow"><label>Relacionado con</label><input id="d-rel" placeholder="Ej: Informe Mes 1, Tarea #3..."></div>
+      </div>
+      <div class="frow">
+        <label>Seleccionar Archivo</label>
+        <div class="dz" onclick="document.getElementById('fi-doc').click()">
+          <div class="dz-ico">📁</div><p>Haz clic para seleccionar</p>
+        </div>
+        <input type="file" id="fi-doc" style="display:none" onchange="previewDoc(this)">
+        <div id="doc-preview" style="margin-top:8px"></div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-o" onclick="closeM('m-doc')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveDoc()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m-factura">
+  <div class="modal">
+    <div class="mhd"><h3>💰 Registrar Cuota</h3><button class="btn btn-o btn-xs" onclick="closeM('m-factura')">✕</button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="frow"><label>Cuota #</label><input type="number" id="fa-num" min="1" max="9"></div>
+        <div class="frow"><label>Período</label><input type="month" id="fa-per"></div>
+        <div class="frow"><label>Valor ($)</label><input type="number" id="fa-val" placeholder="165261000"></div>
+        <div class="frow"><label>Radicación</label><input type="date" id="fa-rad"></div>
+        <div class="frow"><label>Fecha Pago</label><input type="date" id="fa-pago"></div>
+        <div class="frow"><label>Estado</label><select id="fa-est"><option value="programado">Programado</option><option value="radicado">Radicado</option><option value="en revision">En Revisión</option><option value="pagado">Pagado</option><option value="glosado">Glosado</option></select></div>
+        <div class="frow" style="grid-column:1/-1"><label>Observación</label><input id="fa-obs" placeholder="Notas..."></div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-o" onclick="closeM('m-factura')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveFactura()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+// ─── HELPERS ───
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toast(msg,cls){
+  var w=document.getElementById('toasts');
+  var el=document.createElement('div');
+  el.className='toast '+(cls||'tinf');
+  el.textContent=msg;
+  w.appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},3000);
+}
+function openM(id){
+  document.getElementById(id).classList.add('open');
+  if(id==='m-doc'){
+    pendDocFile=null;
+    var prev=document.getElementById('doc-preview');if(prev)prev.innerHTML='';
+    var savBtn=document.querySelector('#m-doc .mft .btn-p');if(savBtn)savBtn.disabled=false;
+  }
+  if(id==='m-upload'){
+    pendUploadFile=null;
+    var ico=document.getElementById('dz-ico');if(ico)ico.textContent='📂';
+    var txt=document.getElementById('dz-txt');if(txt)txt.innerHTML='Arrastra cualquier archivo aquí o <span style="color:var(--tl);text-decoration:underline">haz clic para seleccionar</span>';
+    var res=document.getElementById('csv-result');if(res)res.innerHTML='';
+    var btn=document.getElementById('btn-procesar');if(btn){btn.disabled=true;btn.textContent='📊 Procesar e Importar';}
+    var fi=document.getElementById('fi-data');if(fi)fi.value='';
+  }
+}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.overlay').forEach(function(o){
+  o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('open');});
+});
+
+// ─── STORAGE ───
+function load(k){try{return JSON.parse(localStorage.getItem('ds360_'+k))||null;}catch(e){return null;}}
+function save(k,v){localStorage.setItem('ds360_'+k,JSON.stringify(v));localStorage.setItem('ds360_ts',new Date().toISOString());var el=document.getElementById('sb-saved');if(el)el.textContent=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});}
+
+// ─── DEFAULT DATA ───
+var DT=[
+  {id:1,name:'Garantizar disponibilidad y operatividad plataforma DataSalud360 y Magentrack360',area:'Plataforma',estado:'activo',prio:'alta',fecha:'2026-12-31',resp:'Infraestructura',evid:'Reporte de uptime mensual',notas:'',files:[],done:false},
+  {id:2,name:'Otorgar 150 licencias a IPS/ESE habilitadas en Antioquia',area:'PM',estado:'en proceso',prio:'alta',fecha:'2026-05-30',resp:'PM / Técnico',evid:'Acta entrega licencias · lista usuarios activados',notas:'132 para IPS, 18 a disposición Gobernación y ESE',files:[],done:false},
+  {id:3,name:'Otorgar 150 usuarios DataSalud360 + 150 usuarios Magentrack360',area:'Admin',estado:'en proceso',prio:'alta',fecha:'2026-05-15',resp:'PM',evid:'Matriz de usuarios y roles',notas:'Distribuidos según roles solicitados por la ESE',files:[],done:false},
+  {id:4,name:'Registro y almacenamiento seguro de información (infraestructura cloud)',area:'TI',estado:'activo',prio:'media',fecha:'2026-12-31',resp:'TI',evid:'Certificado de seguridad · política de datos',notas:'',files:[],done:false},
+  {id:5,name:'Generar alertas automáticas priorizadas por nivel de riesgo',area:'Plataforma',estado:'activo',prio:'alta',fecha:'2026-12-31',resp:'Plataforma',evid:'Reporte alertas generadas vs atendidas',notas:'',files:[],done:false},
+  {id:6,name:'Dashboards parametrizables Magentrack360 con indicadores de seguimiento',area:'Producto',estado:'activo',prio:'media',fecha:'2026-12-31',resp:'Producto',evid:'Capturas tableros configurados por IPS',notas:'',files:[],done:false},
+  {id:7,name:'Georreferenciación y trazabilidad territorial – mapa interactivo',area:'Plataforma',estado:'activo',prio:'media',fecha:'2026-12-31',resp:'Plataforma',evid:'Mapa con pacientes y equipos geolocalizados',notas:'',files:[],done:false},
+  {id:8,name:'Gestión y seguimiento de alertas (asignación, tiempos de respuesta)',area:'Gestores',estado:'en proceso',prio:'alta',fecha:'2026-05-30',resp:'Gestores',evid:'Log de alertas gestionadas',notas:'',files:[],done:false},
+  {id:9,name:'Perfiles integrales de pacientes (clínico, antecedentes, mediciones)',area:'Plataforma',estado:'activo',prio:'media',fecha:'2026-12-31',resp:'Plataforma',evid:'Expedientes activos en plataforma',notas:'',files:[],done:false},
+  {id:10,name:'Monitoreo indicadores normativos Resolución 3280/2018 y RIAS',area:'Clínico',estado:'en proceso',prio:'alta',fecha:'2026-06-30',resp:'PM / Clínico',evid:'Tablero de indicadores RIAS',notas:'Implementación parcial',files:[],done:false},
+  {id:11,name:'Gestión de usuarios y roles del sistema',area:'Admin',estado:'activo',prio:'media',fecha:'2026-12-31',resp:'Admin',evid:'Módulo usuarios habilitado · guía paso a paso',notas:'',files:[],done:false},
+  {id:12,name:'Soporte técnico oportuno – canal de atención a incidentes',area:'Soporte',estado:'activo',prio:'alta',fecha:'2026-12-31',resp:'Soporte',evid:'Tickets registrados y tiempos resolución',notas:'',files:[],done:false},
+  {id:13,name:'Capacitación 60h (30h presencial + 30h virtual) + instructivos por usuario',area:'Capacitación',estado:'en proceso',prio:'alta',fecha:'2026-09-30',resp:'Capacitación',evid:'Listas asistencia · grabaciones · manuales',notas:'Sesión 14-abr ejecutada. Pendiente módulo sífilis.',files:[],done:false},
+  {id:14,name:'Generación de reportes e indicadores (MME, VIH, sífilis)',area:'Plataforma',estado:'activo',prio:'media',fecha:'2026-12-31',resp:'Plataforma',evid:'Reportes descargados y verificados por supervisor',notas:'',files:[],done:false},
+  {id:15,name:'Informe mensual de cumplimiento + factura presentados al Supervisor',area:'Admin',estado:'pendiente',prio:'alta',fecha:'2026-04-30',resp:'PM / Admin',evid:'Informe firmado + factura radicada',notas:'',files:[],done:false},
+  {id:16,name:'Suscribir Acta de Inicio con el Supervisor',area:'PM',estado:'en proceso',prio:'alta',fecha:'2026-04-25',resp:'PM',evid:'Acta firmada por ambas partes',notas:'',files:[],done:false},
+  {id:17,name:'Martha González: confirmar hora límite registro sistema 3.0 y migración DataSalud360',area:'PM',estado:'pendiente',prio:'alta',fecha:'2026-04-20',resp:'Martha González',evid:'Comunicación escrita al grupo',notas:'Compromiso post-capacitación 14-abr',files:[],done:false},
+  {id:18,name:'Enviar a Diana Marcela Marín guía paso a paso para crear usuarios',area:'Admin',estado:'pendiente',prio:'media',fecha:'2026-04-22',resp:'Equipo',evid:'Instructivo enviado y confirmado',notas:'',files:[],done:false},
+  {id:19,name:'Diana Marcela Marín: probar plataforma en producción y notificar incidentes',area:'Plataforma',estado:'pendiente',prio:'media',fecha:'2026-04-22',resp:'Diana Marcela Marín',evid:'Confirmación por correo o mensaje',notas:'app.magentrac.com – mismo usuario/contraseña',files:[],done:false}
+];
+var DH=[
+  {id:1,nombre:'Capacitación inicial DataSalud360',fecha:'2026-04-14',estado:'completado',desc:'ESE Hospital Marco Fidel Suárez · Primera sesión',resp:'Capacitación'},
+  {id:2,nombre:'Migración masiva datos Sistema 3.0 a DataSalud360',fecha:'2026-04-15',estado:'completado',desc:'Migración nocturna ejecutada',resp:'TI'},
+  {id:3,nombre:'Activación ambiente de producción',fecha:'2026-04-16',estado:'en proceso',desc:'app.magentrac.com activo',resp:'Plataforma'},
+  {id:4,nombre:'Suscripción Acta de Inicio con Supervisor',fecha:'2026-04-25',estado:'pendiente',desc:'Inicio oficial del plazo de 281 días',resp:'PM'},
+  {id:5,nombre:'Primer Informe Mensual + Factura #1',fecha:'2026-04-30',estado:'pendiente',desc:'Radicación ante el Supervisor',resp:'PM / Admin'},
+  {id:6,nombre:'Activación 132 licencias IPS Antioquia',fecha:'2026-05-31',estado:'pendiente',desc:'Una vez finalice ambiente de pruebas',resp:'PM / Técnico'},
+  {id:7,nombre:'Capacitación módulo sífilis gestacional',fecha:'2026-05-31',estado:'pendiente',desc:'Coordinada con Diana Marcela Marín',resp:'Capacitación'},
+  {id:8,nombre:'Meta: 80 licencias DS360 activas',fecha:'2026-06-30',estado:'pendiente',desc:'Meta Trimestre 1',resp:'PM'},
+  {id:9,nombre:'60 horas capacitación completadas',fecha:'2026-09-30',estado:'pendiente',desc:'Meta Trimestre 2',resp:'Capacitación'},
+  {id:10,nombre:'Cierre y liquidación del contrato',fecha:'2026-12-31',estado:'pendiente',desc:'Acta de liquidación final',resp:'PM / Legal'}
+];
+var DF=[
+  {id:1,num:1,periodo:'2026-04',valor:165261000,rad:'',pago:'',estado:'programado',obs:''},
+  {id:2,num:2,periodo:'2026-05',valor:165261000,rad:'',pago:'',estado:'programado',obs:''},
+  {id:3,num:3,periodo:'2026-06',valor:165261000,rad:'',pago:'',estado:'programado',obs:''},
+  {id:4,num:4,periodo:'2026-07',valor:165261000,rad:'',pago:'',estado:'programado',obs:''},
+  {id:5,num:5,periodo:'2026-08',valor:165261000,rad:'',pago:'',estado:'programado',obs:''},
+  {id:6,num:6,periodo:'2026-09',valor:165261000,rad:'',pago:'',estado:'programado',obs:''},
+  {id:7,num:7,periodo:'2026-10',valor:165261000,rad:'',pago:'',estado:'programado',obs:''},
+  {id:8,num:8,periodo:'2026-11',valor:165261000,rad:'',pago:'',estado:'programado',obs:''},
+  {id:9,num:9,periodo:'2026-12',valor:165261000,rad:'',pago:'',estado:'programado',obs:''}
+];
+
+// ─── STATE ───
+var tasks=load('tasks')||DT;
+var hitos=load('hitos')||DH;
+var facturas=load('facturas')||DF;
+var informes=load('informes')||[];
+var docs=load('docs')||[];
+var pendTaskFiles=[];
+var pendInfFiles=[];
+var pendDocFile=null;
+var pendUploadFile=null;
+var editTaskId=null;
+var taskFilter='all';
+var docFilter='all';
+
+function saveAll(){save('tasks',tasks);save('hitos',hitos);save('facturas',facturas);save('informes',informes);save('docs',docs);}
+
+// ─── STATUS MAPS ───
+var SM={activo:'bok',completada:'bd','en proceso':'bw',pendiente:'bp',critico:'bc'};
+var PM2={alta:'pa',media:'pm',baja:'pb'};
+var MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+// ─── NAV ───
+function nav(p){
+  document.querySelectorAll('.pg').forEach(function(el){el.style.display='none';});
+  document.querySelectorAll('.sb-nav a').forEach(function(el){el.classList.remove('active');});
+  var pg=document.getElementById('pg-'+p);
+  if(pg)pg.style.display='block';
+  var nb=document.getElementById('nav-'+p);
+  if(nb)nb.classList.add('active');
+  render(p);
+}
+function render(p){
+  if(p==='dashboard')renderDash();
+  else if(p==='tareas')renderTasks();
+  else if(p==='informes')renderInformes();
+  else if(p==='facturacion')renderFac();
+  else if(p==='cronograma')renderHitos();
+  else if(p==='documentos')renderDocs();
+}
+
+// ─── DASHBOARD ───
+function renderDash(){
+  var total=tasks.length;
+  var done=tasks.filter(function(t){return t.done||t.estado==='completada';}).length;
+  var pend=tasks.filter(function(t){return t.estado==='pendiente';}).length;
+  var crit=tasks.filter(function(t){return t.estado==='critico';}).length;
+  var diff=Math.max(0,Math.ceil((new Date('2026-12-31')-new Date())/(864e5)));
+  var sb=document.getElementById('sb-days');if(sb)sb.textContent=diff+'d';
+  var kpi=document.getElementById('kpi-row');
+  if(kpi){
+    var rows=[
+      {c:'ct',l:'Tareas Totales',v:total,s:done+' completadas'},
+      {c:'cn',l:'Completadas',v:done,s:Math.round(done/Math.max(1,total)*100)+'% del total'},
+      {c:'cg',l:'En Proceso',v:tasks.filter(function(t){return t.estado==='en proceso';}).length,s:'Requieren seguimiento'},
+      {c:'cr',l:'Pendientes / Críticas',v:pend+crit,s:crit+' críticas'},
+      {c:'cb',l:'Documentos',v:docs.length,s:'En repositorio'},
+      {c:'ct',l:'Días Restantes',v:diff,s:'Al 31-dic-2026'}
+    ];
+    var html='';
+    rows.forEach(function(r){html+='<div class="kpi '+r.c+'"><div class="kpi-lbl">'+r.l+'</div><div class="kpi-val">'+r.v+'</div><div class="kpi-sub">'+r.s+'</div></div>';});
+    kpi.innerHTML=html;
+  }
+  var critList=tasks.filter(function(t){return !t.done&&t.estado!=='completada';}).sort(function(a,b){
+    var sw={critico:0,pendiente:1,'en proceso':2,activo:3};
+    var pw={alta:0,media:1,baja:2};
+    var d=(sw[a.estado]||9)-(sw[b.estado]||9);
+    return d!==0?d:(pw[a.prio]||9)-(pw[b.prio]||9);
+  }).slice(0,8);
+  var tb=document.getElementById('db-tasks');
+  if(tb){
+    if(!critList.length){tb.innerHTML='<tr><td colspan="6" class="es">✅ No hay tareas críticas pendientes</td></tr>';return;}
+    var html='';
+    critList.forEach(function(t){html+=taskRowHTML(t,true);});
+    tb.innerHTML=html;
+    attachTaskEvents(tb);
+  }
+  var areas={};
+  tasks.forEach(function(t){if(!areas[t.area])areas[t.area]={tot:0,done:0};areas[t.area].tot++;if(t.done||t.estado==='completada')areas[t.area].done++;});
+  var pc=document.getElementById('db-progress');
+  if(pc){
+    var html='';
+    var cols={'Plataforma':'pft','PM':'pfg','Capacitación':'pfn','Soporte':'pft','Admin':'pfg','TI':'pfn','Clínico':'pfr','Gestores':'pfr','Producto':'pft'};
+    Object.keys(areas).forEach(function(a){
+      var v=areas[a];var pct=Math.round(v.done/v.tot*100);
+      html+='<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:4px"><span style="color:var(--dim)">'+a+'</span><span style="color:#fff">'+v.done+'/'+v.tot+' ('+pct+'%)</span></div><div class="pbar"><div class="pfill '+(cols[a]||'pft')+'" style="width:'+pct+'%"></div></div></div>';
+    });
+    pc.innerHTML=html||'<div class="es">Sin datos</div>';
+  }
+  var dd=document.getElementById('db-docs');
+  if(dd){
+    var recent=docs.slice(-5).reverse();
+    if(!recent.length){dd.innerHTML='<div class="es">📂 Sin documentos. <button class="btn btn-o btn-sm" onclick="openM(\'m-doc\')">Subir primero</button></div>';}
+    else{
+      var html='';
+      recent.forEach(function(d){html+='<div class="evrow"><span style="color:var(--text)">📄 '+esc(d.nombre)+'</span><span class="badge bb">'+esc(d.cat)+'</span><span class="mono" style="font-size:.68rem;color:var(--dim)">'+esc(d.fecha||'')+'</span></div>';});
+      dd.innerHTML=html;
+    }
+  }
+}
+
+// ─── TASK ROW HTML (NO template literals for data) ───
+function taskRowHTML(t,compact){
+  var done=t.done||t.estado==='completada';
+  var st=SM[t.estado]||'bp';
+  var pr=PM2[t.prio]||'pm';
+  var dc=done?'done-row':'';
+  var cb='<input type="checkbox"'+(done?' checked':'')+' class="tcb" data-id="'+t.id+'" style="accent-color:var(--teal);cursor:pointer;width:15px;height:15px">';
+  var name='<span class="tn">'+esc(t.name)+'</span>';
+  var badge='<span class="badge '+st+'">'+esc(t.estado)+'</span>';
+  var prioHtml='<span class="prio '+pr+'"></span> '+esc(t.prio);
+  var dateInput='<input type="date" class="de tdate" data-id="'+t.id+'" value="'+esc(t.fecha||'')+'" title="Cambiar fecha">';
+  var acts='<div class="acts"><button class="btn btn-o btn-xs tedit" data-id="'+t.id+'" title="Editar">✏</button>';
+  if(!compact)acts+='<button class="btn btn-p btn-xs tdone" data-id="'+t.id+'" title="Completar">✅</button>';
+  acts+='<button class="btn btn-d btn-xs tdel" data-id="'+t.id+'" title="Eliminar">🗑</button></div>';
+  var files=t.files&&t.files.length?'<span class="badge bb">📎 '+t.files.length+'</span>':'';
+  if(compact){
+    return '<tr class="'+dc+'" id="tr-'+t.id+'"><td>'+cb+'</td><td style="max-width:280px">'+name+'</td><td>'+badge+'</td><td>'+prioHtml+'</td><td>'+dateInput+'</td><td>'+acts+'</td></tr>';
+  }
+  return '<tr class="'+dc+'" id="tr-'+t.id+'"><td>'+cb+'</td><td class="mono" style="color:var(--dim)">'+String(t.id).padStart(2,'0')+'</td><td style="max-width:250px">'+name+'</td><td><span class="tag">'+esc(t.area)+'</span></td><td>'+badge+'</td><td>'+prioHtml+'</td><td>'+dateInput+'</td><td>'+files+'</td><td>'+acts+'</td></tr>';
+}
+
+function attachTaskEvents(container){
+  container.querySelectorAll('.tcb').forEach(function(el){el.addEventListener('change',function(){toggleDone(parseInt(el.dataset.id),el.checked);});});
+  container.querySelectorAll('.tdate').forEach(function(el){el.addEventListener('change',function(){updateDate(parseInt(el.dataset.id),el.value);});});
+  container.querySelectorAll('.tedit').forEach(function(el){el.addEventListener('click',function(){editTask(parseInt(el.dataset.id));});});
+  container.querySelectorAll('.tdone').forEach(function(el){el.addEventListener('click',function(){markDone(parseInt(el.dataset.id));});});
+  container.querySelectorAll('.tdel').forEach(function(el){el.addEventListener('click',function(){delTask(parseInt(el.dataset.id));});});
+}
+
+// ─── TASKS ───
+function renderTasks(){
+  var filtered=taskFilter==='all'?tasks:tasks.filter(function(t){return taskFilter==='completada'?(t.done||t.estado==='completada'):t.estado===taskFilter;});
+  var tb=document.getElementById('all-tasks');
+  if(!filtered.length){tb.innerHTML='<tr><td colspan="9" class="es">No hay tareas con este filtro</td></tr>';return;}
+  var html='';filtered.forEach(function(t){html+=taskRowHTML(t,false);});
+  tb.innerHTML=html;
+  attachTaskEvents(tb);
+}
+
+function setFilter(f,el){
+  taskFilter=f;
+  document.querySelectorAll('#tfilt button').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  renderTasks();
+}
+
+function toggleDone(id,checked){
+  var t=tasks.find(function(t){return t.id===id;});if(!t)return;
+  t.done=checked;t.estado=checked?'completada':'en proceso';
+  saveAll();renderTasks();renderDash();
+  toast(checked?'✅ Tarea completada':'↩ Reabierta',checked?'tok':'tinf');
+}
+function markDone(id){
+  var t=tasks.find(function(t){return t.id===id;});if(!t)return;
+  t.done=true;t.estado='completada';saveAll();renderTasks();renderDash();
+  toast('✅ Completada','tok');
+}
+function updateDate(id,val){
+  var t=tasks.find(function(t){return t.id===id;});if(!t)return;
+  t.fecha=val;saveAll();toast('📅 Fecha actualizada','tinf');
+}
+function delTask(id){
+  if(!confirm('¿Eliminar esta tarea?'))return;
+  tasks=tasks.filter(function(t){return t.id!==id;});
+  saveAll();renderTasks();renderDash();toast('🗑 Tarea eliminada','terr');
+}
+function editTask(id){
+  var t=tasks.find(function(t){return t.id===id;});if(!t)return;
+  editTaskId=id;
+  document.getElementById('m-task-title').textContent='Editar Tarea';
+  document.getElementById('t-id').value=id;
+  document.getElementById('t-name').value=t.name;
+  document.getElementById('t-area').value=t.area;
+  document.getElementById('t-estado').value=t.estado;
+  document.getElementById('t-prio').value=t.prio;
+  document.getElementById('t-fecha').value=t.fecha||'';
+  document.getElementById('t-resp').value=t.resp||'';
+  document.getElementById('t-evid').value=t.evid||t.evidencia||'';
+  document.getElementById('t-notas').value=t.notas||'';
+  pendTaskFiles=t.files?t.files.slice():[];
+  renderTaskFileList();
+  openM('m-task');
+}
+function resetTaskForm(){
+  editTaskId=null;pendTaskFiles=[];
+  document.getElementById('m-task-title').textContent='Nueva Tarea';
+  document.getElementById('t-id').value='';
+  ['t-name','t-fecha','t-resp','t-evid','t-notas'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('t-area').value='Plataforma';
+  document.getElementById('t-estado').value='pendiente';
+  document.getElementById('t-prio').value='alta';
+  document.getElementById('task-files').innerHTML='';
+}
+function saveTask(){
+  var name=document.getElementById('t-name').value.trim();
+  if(!name){toast('⚠ El nombre es requerido','terr');return;}
+  var data={name:name,area:document.getElementById('t-area').value,estado:document.getElementById('t-estado').value,prio:document.getElementById('t-prio').value,fecha:document.getElementById('t-fecha').value,resp:document.getElementById('t-resp').value,evid:document.getElementById('t-evid').value,evidencia:document.getElementById('t-evid').value,notas:document.getElementById('t-notas').value,files:pendTaskFiles,done:false};
+  if(editTaskId){
+    var t=tasks.find(function(t){return t.id===editTaskId;});
+    if(t){data.done=t.done;Object.assign(t,data);}
+  }else{
+    var newId=Math.max.apply(null,[0].concat(tasks.map(function(t){return t.id;})))+1;
+    data.id=newId;tasks.push(data);
+  }
+  saveAll();closeM('m-task');renderTasks();renderDash();
+  toast(editTaskId?'✏ Tarea actualizada':'✅ Tarea creada','tok');
+}
+
+// ─── TASK FILES ───
+function addTaskFiles(input){
+  if(!input.files||!input.files.length)return;
+  Array.from(input.files).forEach(function(f){
+    var fr=new FileReader();
+    fr.onload=function(e){pendTaskFiles.push({name:f.name,size:f.size,type:f.type,data:e.target.result,date:new Date().toLocaleDateString('es-CO')});renderTaskFileList();};
+    fr.readAsDataURL(f);
+  });
+  input.value='';
+}
+function renderTaskFileList(){
+  var el=document.getElementById('task-files');
+  var html='';
+  pendTaskFiles.forEach(function(f,i){html+='<span class="fchip">📎 '+esc(f.name)+'<button onclick="removeTF('+i+')">✕</button></span>';});
+  el.innerHTML=html;
+}
+function removeTF(i){pendTaskFiles.splice(i,1);renderTaskFileList();}
+
+// ─── CSV LOAD ───
+function dzDrag(e,on){e.preventDefault();document.getElementById('upload-dz').style.borderColor=on?'var(--teal)':'var(--bord)';document.getElementById('upload-dz').style.background=on?'rgba(13,148,136,.06)':'';}
+function dzDrop(e){e.preventDefault();dzDrag(e,false);var files=e.dataTransfer.files;if(files.length){var fake={files:files};previewUpload(fake);}}
+function previewUpload(input){
+  var f=input.files[0];if(!f)return;
+  pendUploadFile=f;
+  var dz=document.getElementById('upload-dz');
+  var ico=document.getElementById('dz-ico');
+  var txt=document.getElementById('dz-txt');
+  var res=document.getElementById('csv-result');
+  var btn=document.getElementById('btn-procesar');
+  var ext=f.name.split('.').pop().toLowerCase();
+  var icons={csv:'📄',xlsx:'📊',xls:'📊',json:'📋',txt:'📝',docx:'📝'};
+  if(ico)ico.textContent=icons[ext]||'📂';
+  if(txt)txt.innerHTML='<strong style="color:var(--tl)">'+esc(f.name)+'</strong><br><span style="font-size:.72rem;color:var(--dim)">'+Math.round(f.size/1024)+'KB · '+ext.toUpperCase()+'</span>';
+  if(res)res.innerHTML='<div class="alrt ai">✅ Archivo seleccionado: <strong>'+esc(f.name)+'</strong>. Haz clic en <strong>Procesar e Importar</strong> para cargar las tareas.</div>';
+  if(btn){btn.disabled=false;}
+}
+function procesarArchivo(){
+  if(!pendUploadFile){toast('⚠ Primero selecciona un archivo','terr');return;}
+  var btn=document.getElementById('btn-procesar');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Procesando...';}
+  loadData({files:[pendUploadFile]});
+  pendUploadFile=null;
+  setTimeout(function(){
+    if(btn){btn.disabled=false;btn.textContent='📊 Procesar e Importar';}
+  },2000);
+}
+function loadData(input){
+  var f=input.files[0];if(!f)return;
+  var name=f.name.toLowerCase();
+  var res=document.getElementById('csv-result');
+  if(res)res.innerHTML='<div class="alrt ai">⏳ Procesando <strong>'+esc(f.name)+'</strong>...</div>';
+  if(name.endsWith('.xlsx')||name.endsWith('.xls')){
+    loadExcel(f);
+  } else if(name.endsWith('.json')){
+    var r=new FileReader();
+    r.onload=function(e){loadJSON(e.target.result,f.name);};
+    r.readAsText(f,'UTF-8');
+  } else {
+    // CSV, TXT, DOCX (text fallback), any other text file
+    var r=new FileReader();
+    r.onload=function(e){loadCSVText(e.target.result,f.name);};
+    r.readAsText(f,'UTF-8');
+  }
+  if(input.value!==undefined)input.value='';
+}
+function parseRowsToTasks(rows,fname){
+  var added=0,upd=0,skip=0;
+  rows.forEach(function(row){
+    var nm=(row.nombre||row.name||row.Nombre||row.NOMBRE||'').trim();
+    if(!nm){skip++;return;}
+    var ex=tasks.find(function(t){return t.name.toLowerCase()===nm.toLowerCase();});
+    var est=(row.estado||row.Estado||'').trim();
+    var prio=(row.prioridad||row.Prioridad||row.prio||'').trim();
+    var fecha=(row.fecha_limite||row.fecha||row.Fecha||row.Fecha_limite||'').trim();
+    var resp=(row.responsable||row.Responsable||row.resp||'').trim();
+    var evid=(row.evidencia||row.Evidencia||'').trim();
+    var notas=(row.notas||row.Notas||'').trim();
+    var area=(row.area||row.Area||'').trim();
+    if(ex){
+      if(est)ex.estado=est;
+      if(prio)ex.prio=prio;
+      if(fecha)ex.fecha=fecha;
+      if(resp)ex.resp=resp;
+      if(evid){ex.evidencia=evid;ex.evid=evid;}
+      if(notas)ex.notas=notas;
+      if(area)ex.area=area;
+      upd++;
+    } else {
+      var nid=Math.max.apply(null,[0].concat(tasks.map(function(t){return t.id;})))+1;
+      tasks.push({id:nid,name:nm,area:area||'PM',estado:est||'pendiente',prio:prio||'media',fecha:fecha,resp:resp,evid:evid,evidencia:evid,notas:notas,files:[],done:false});
+      added++;
+    }
+  });
+  saveAll();renderDash();renderTasks();
+  var res=document.getElementById('csv-result');
+  var msg='✅ <strong>'+esc(fname)+'</strong>: '+added+' tareas nuevas';
+  if(upd)msg+=', '+upd+' actualizadas';
+  if(skip)msg+=', '+skip+' filas omitidas (sin nombre)';
+  if(res)res.innerHTML='<div class="alrt ai">'+msg+'</div>';
+  toast('📊 '+added+' nuevas, '+upd+' actualizadas','tok');
+}
+function loadCSVText(text,fname){
+  try{
+    var lines=text.split(/\r?\n/).filter(function(l){return l.trim();});
+    if(lines.length<2){toast('⚠ Archivo sin datos o solo encabezados','terr');return;}
+    var delim=lines[0].indexOf(';')>-1?';':lines[0].indexOf('\t')>-1?'\t':',';
+    function splitRow(row){
+      var res=[],cur='',q=false;
+      for(var i=0;i<row.length;i++){
+        var c=row[i];
+        if(c==='"')q=!q;
+        else if(c===delim&&!q){res.push(cur.trim());cur='';}
+        else cur+=c;
+      }
+      res.push(cur.trim());return res;
+    }
+    var hdrs=splitRow(lines[0]).map(function(h){return h.replace(/"/g,'').trim().toLowerCase();});
+    var rows=[];
+    for(var i=1;i<lines.length;i++){
+      if(!lines[i].trim())continue;
+      var cols=splitRow(lines[i]).map(function(c){return c.replace(/"/g,'').trim();});
+      var row={};hdrs.forEach(function(h,j){row[h]=cols[j]||'';});
+      rows.push(row);
+    }
+    parseRowsToTasks(rows,fname);
+  }catch(err){toast('⚠ Error CSV: '+err.message,'terr');}
+}
+function loadJSON(text,fname){
+  try{
+    var data=JSON.parse(text);
+    var rows=Array.isArray(data)?data:(data.tareas||data.tasks||data.data||[data]);
+    if(!rows.length){toast('⚠ JSON sin registros','terr');return;}
+    parseRowsToTasks(rows,fname);
+  }catch(err){toast('⚠ Error JSON: '+err.message,'terr');}
+}
+function loadExcel(file){
+  // Load SheetJS from CDN dynamically
+  if(window.XLSX){readExcelFile(file);return;}
+  var s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  s.onload=function(){readExcelFile(file);};
+  s.onerror=function(){
+    toast('⚠ Sin conexión para cargar Excel. Usa CSV en su lugar.','terr');
+    var res=document.getElementById('csv-result');
+    if(res)res.innerHTML='<div class="alrt aw">⚠ No se pudo cargar la librería Excel. Convierte el archivo a CSV y vuelve a intentarlo.</div>';
+  };
+  document.head.appendChild(s);
+}
+function readExcelFile(file){
+  var r=new FileReader();
+  r.onload=function(e){
+    try{
+      var wb=XLSX.read(e.target.result,{type:'array'});
+      var ws=wb.Sheets[wb.SheetNames[0]];
+      var rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+      if(!rows.length){toast('⚠ Excel sin datos','terr');return;}
+      // Normalize keys to lowercase
+      var norm=rows.map(function(r){var o={};Object.keys(r).forEach(function(k){o[k.toLowerCase().trim()]=String(r[k]||'');});return o;});
+      parseRowsToTasks(norm,file.name);
+    }catch(err){toast('⚠ Error Excel: '+err.message,'terr');}
+  };
+  r.readAsArrayBuffer(file);
+}
+function dlPlantilla(fmt){
+  if(fmt==='json'){
+    var obj=[{nombre:'Activar usuarios IPS Medellín',area:'PM',estado:'pendiente',prioridad:'alta',fecha_limite:'2026-05-15',responsable:'Nombre Responsable',evidencia:'Lista de usuarios activados',notas:'Descripción adicional'},{nombre:'Capacitación presencial IPS Norte',area:'Capacitación',estado:'en proceso',prioridad:'media',fecha_limite:'2026-06-30',responsable:'Equipo capacitación',evidencia:'Lista asistencia firmada',notas:''}];
+    var a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(obj,null,2));a.download='DataSalud360_Plantilla.json';a.click();
+  } else {
+    var csv='"nombre","area","estado","prioridad","fecha_limite","responsable","evidencia","notas"\n"Activar usuarios IPS Medell\u00edn","PM","pendiente","alta","2026-05-15","Nombre Responsable","Lista de usuarios","Descripci\u00f3n adicional"\n"Capacitaci\u00f3n presencial IPS Norte","Capacitaci\u00f3n","en proceso","media","2026-06-30","Equipo","Lista asistencia",""';
+    var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='DataSalud360_Plantilla.csv';a.click();
+  }
+  toast('\u2b07 Plantilla descargada','tok');
+}
+
+function exportCSV(){
+  var rows=['"ID","Nombre","Area","Estado","Prioridad","Fecha Limite","Responsable","Evidencia","Completada"'];
+  tasks.forEach(function(t){rows.push([t.id,t.name,t.area,t.estado,t.prio,t.fecha,t.resp,t.evidencia||t.evid||'',t.done?'Si':'No'].map(function(c){return '"'+String(c||'').replace(/"/g,'""')+'"';}).join(','));});
+  var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.join('\n'));a.download='DS360_Tareas_'+new Date().toISOString().slice(0,10)+'.csv';a.click();toast('⬇ CSV exportado','tok');
+}
+
+// ─── INFORMES ───
+function addInfFiles(input){
+  if(!input.files||!input.files.length)return;
+  Array.from(input.files).forEach(function(f){
+    var fr=new FileReader();
+    fr.onload=function(e){pendInfFiles.push({name:f.name,size:f.size,data:e.target.result,date:new Date().toLocaleDateString('es-CO')});renderInfFileList();};
+    fr.readAsDataURL(f);
+  });
+  input.value='';
+}
+function renderInfFileList(){
+  var el=document.getElementById('inf-files');
+  var html='';
+  pendInfFiles.forEach(function(f,i){html+='<span class="fchip">📋 '+esc(f.name)+'<button onclick="removeIF('+i+')">✕</button></span>';});
+  el.innerHTML=html;
+}
+function removeIF(i){pendInfFiles.splice(i,1);renderInfFileList();}
+function saveInforme(){
+  var mes=document.getElementById('i-mes').value;if(!mes){toast('⚠ Selecciona período','terr');return;}
+  var inf={id:Date.now(),mes:mes,num:document.getElementById('i-num').value,fecha:document.getElementById('i-fecha').value,estado:document.getElementById('i-estado').value,valor:document.getElementById('i-valor').value,resumen:document.getElementById('i-resumen').value,
+    ind:{gest:document.getElementById('i-gest').value,alert:document.getElementById('i-alert').value,gest2:document.getElementById('i-gest2').value,usua:document.getElementById('i-usua').value,cap:document.getElementById('i-cap').value,tick:document.getElementById('i-tick').value},
+    files:pendInfFiles.slice(),created:new Date().toLocaleDateString('es-CO')};
+  pendInfFiles.forEach(function(f){docs.push({id:Date.now()+Math.random(),nombre:f.name,cat:'informe',rel:'Informe Mes '+(inf.num||mes),fecha:new Date().toLocaleDateString('es-CO'),size:f.size,data:f.data});});
+  pendInfFiles=[];informes.push(inf);saveAll();closeM('m-informe');renderInformes();
+  toast('📄 Informe guardado','tok');
+}
+function renderInformes(){
+  var el=document.getElementById('inf-list');if(!el)return;
+  if(!informes.length){el.innerHTML='<div class="panel" style="padding:32px;text-align:center;color:var(--dim)">📄 No hay informes aún.<br><br><button class="btn btn-p" onclick="openM(\'m-informe\')">＋ Crear primer informe</button></div>';return;}
+  var SM2={borrador:'bp',pendiente:'bw',radicado:'bb',aprobado:'bok'};
+  var INDS=[['Gestantes','.gest'],['Alertas Gen.','.alert'],['Alertas Gest.','.gest2'],['Usuarios','.usua'],['Horas Cap.','.cap'],['Tickets','.tick']];
+  var html='';
+  informes.slice().reverse().forEach(function(inf){
+    var sbc=SM2[inf.estado]||'bp';
+    var indHtml='';
+    if(inf.ind){
+      var indArr=[['Gestantes',inf.ind.gest],['Alertas Gen.',inf.ind.alert],['Alertas Gest.',inf.ind.gest2],['Usuarios',inf.ind.usua],['Horas Cap.',inf.ind.cap],['Tickets',inf.ind.tick]];
+      indArr.forEach(function(kv){if(kv[1])indHtml+='<div style="background:rgba(13,148,136,.07);border-radius:6px;padding:8px;font-size:.7rem"><div style="color:var(--dim)">'+kv[0]+'</div><div style="font-weight:600;color:var(--tl)">'+esc(kv[1])+'</div></div>';});
+      if(indHtml)indHtml='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:10px">'+indHtml+'</div>';
+    }
+    var filesHtml='';
+    if(inf.files&&inf.files.length){
+      var chips='';
+      inf.files.forEach(function(f,fi){chips+='<span class="fchip" data-iid="'+inf.id+'" data-fi="'+fi+'">📎 '+esc(f.name)+'</span>';});
+      filesHtml='<div><div style="font-size:.68rem;color:var(--dim);margin-bottom:4px">Documentos:</div><div>'+chips+'</div></div>';
+    }
+    var valStr=inf.valor?'$'+Number(inf.valor).toLocaleString('es-CO'):'—';
+    var resHtml=inf.resumen?'<div style="font-size:.78rem;color:var(--dim);margin-bottom:8px;background:rgba(255,255,255,.03);padding:10px;border-radius:8px">'+esc(inf.resumen)+'</div>':'';
+    html+='<div class="icard"><div class="icard-hd"><div style="font-weight:600;font-size:.9rem">📄 Informe #'+esc(inf.num||'?')+' — '+esc(inf.mes||'Sin período')+'</div><div class="acts"><span class="badge '+sbc+'">'+esc(inf.estado)+'</span><button class="btn btn-o btn-xs" onclick="cycleInfEst('+inf.id+')">Cambiar estado</button><button class="btn btn-d btn-xs" onclick="delInforme('+inf.id+')">🗑</button></div></div>';
+    html+='<div style="font-size:.73rem;color:var(--dim);margin-bottom:8px">Radicación: '+esc(inf.fecha||'—')+' · Valor: '+valStr+' · Creado: '+esc(inf.created||'')+'</div>';
+    html+=resHtml+indHtml+filesHtml+'</div>';
+  });
+  el.innerHTML=html;
+  el.querySelectorAll('.fchip[data-iid]').forEach(function(chip){
+    chip.addEventListener('click',function(){
+      var iid=parseInt(chip.dataset.iid);var fi=parseInt(chip.dataset.fi);
+      var inf=informes.find(function(x){return x.id===iid;});
+      if(inf&&inf.files&&inf.files[fi])dlFile(inf.files[fi].data,inf.files[fi].name);
+    });
+  });
+}
+function cycleInfEst(id){var inf=informes.find(function(i){return i.id===id;});if(!inf)return;var o=['borrador','pendiente','radicado','aprobado'];inf.estado=o[(o.indexOf(inf.estado)+1)%o.length];saveAll();renderInformes();toast('Estado: '+inf.estado,'tinf');}
+function delInforme(id){if(!confirm('¿Eliminar informe?'))return;informes=informes.filter(function(i){return i.id!==id;});saveAll();renderInformes();}
+
+// ─── FACTURAS ───
+function saveFactura(){
+  var n=parseInt(document.getElementById('fa-num').value)||0;
+  if(!n){toast('⚠ Ingresa número de cuota','terr');return;}
+  var data={num:n,periodo:document.getElementById('fa-per').value,valor:parseFloat(document.getElementById('fa-val').value)||165261000,rad:document.getElementById('fa-rad').value,pago:document.getElementById('fa-pago').value,estado:document.getElementById('fa-est').value,obs:document.getElementById('fa-obs').value};
+  var ex=facturas.find(function(f){return f.num===n;});
+  if(ex)Object.assign(ex,data);else{data.id=Date.now();facturas.push(data);}
+  saveAll();closeM('m-factura');renderFac();toast('💰 Cuota registrada','tok');
+}
+function renderFac(){
+  var SM3={programado:'bp',radicado:'bb','en revision':'bw',pagado:'bok',glosado:'bc'};
+  var paid=facturas.filter(function(f){return f.estado==='pagado';}).reduce(function(s,f){return s+f.valor;},0);
+  var ft=document.getElementById('f-total');if(ft)ft.textContent='$'+Math.round(paid/1e6)+'M';
+  var fp=document.getElementById('f-pend');if(fp)fp.textContent='$'+Math.round((1487348820-paid)/1e6)+'M';
+  var tb=document.getElementById('fac-body');if(!tb)return;
+  var sorted=facturas.slice().sort(function(a,b){return a.num-b.num;});
+  var html='';
+  sorted.forEach(function(f){
+    var m=f.periodo?parseInt(f.periodo.split('-')[1])-1:0;
+    var mn=MESES[m]||f.periodo||'—';
+    html+='<tr><td class="mono">#'+f.num+'</td><td>'+mn+' 2026</td><td class="mono" style="color:var(--tl)">$'+Number(f.valor).toLocaleString('es-CO')+'</td>';
+    html+='<td><input type="date" class="de" value="'+esc(f.rad||'')+'" onchange="updFac('+f.num+',\'rad\',this.value)"></td>';
+    html+='<td><input type="date" class="de" value="'+esc(f.pago||'')+'" onchange="updFac('+f.num+',\'pago\',this.value)"></td>';
+    html+='<td><span class="badge '+SM3[f.estado]+'" style="cursor:pointer" onclick="cycleFac('+f.num+')">'+esc(f.estado)+'</span></td>';
+    html+='<td style="font-size:.72rem;color:var(--dim)">'+esc(f.obs||'—')+'</td>';
+    html+='<td><button class="btn btn-o btn-xs" onclick="editFac('+f.num+')">✏</button></td></tr>';
+  });
+  tb.innerHTML=html;
+}
+function updFac(num,field,val){var f=facturas.find(function(x){return x.num===num;});if(f){f[field]=val;saveAll();renderFac();}}
+function cycleFac(num){var f=facturas.find(function(x){return x.num===num;});if(!f)return;var o=['programado','radicado','en revision','pagado','glosado'];f.estado=o[(o.indexOf(f.estado)+1)%o.length];saveAll();renderFac();toast('Estado: '+f.estado,'tinf');}
+function editFac(num){var f=facturas.find(function(x){return x.num===num;});if(!f)return;document.getElementById('fa-num').value=f.num;document.getElementById('fa-per').value=f.periodo||'';document.getElementById('fa-val').value=f.valor;document.getElementById('fa-rad').value=f.rad||'';document.getElementById('fa-pago').value=f.pago||'';document.getElementById('fa-est').value=f.estado;document.getElementById('fa-obs').value=f.obs||'';openM('m-factura');}
+
+// ─── HITOS ───
+function saveHito(){
+  var nombre=document.getElementById('h-nombre').value.trim();if(!nombre){toast('⚠ Nombre requerido','terr');return;}
+  hitos.push({id:Date.now(),nombre:nombre,fecha:document.getElementById('h-fecha').value,estado:document.getElementById('h-estado').value,desc:document.getElementById('h-desc').value,resp:document.getElementById('h-resp').value});
+  saveAll();closeM('m-hito');renderHitos();toast('🗓 Hito agregado','tok');
+}
+function renderHitos(){
+  var el=document.getElementById('hito-list');if(!el)return;
+  var sorted=hitos.slice().sort(function(a,b){return new Date(a.fecha||0)-new Date(b.fecha||0);});
+  var SM4={completado:'bok',pendiente:'bp','en proceso':'bw'};
+  var html='<div style="position:relative;padding-left:32px">';
+  sorted.forEach(function(h,i){
+    var bg=h.estado==='completado'?'var(--teal)':'var(--navy)';
+    var line=i<sorted.length-1?'<div style="position:absolute;left:-23px;top:18px;bottom:-22px;width:2px;background:var(--bord)"></div>':'';
+    html+='<div style="position:relative;margin-bottom:22px"><div style="position:absolute;left:-29px;top:4px;width:14px;height:14px;border-radius:50%;border:2px solid var(--teal);background:'+bg+'"></div>'+line;
+    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap"><div>';
+    html+='<div class="mono" style="font-size:.68rem;color:var(--tl);margin-bottom:3px">'+esc(h.fecha||'Sin fecha')+'</div>';
+    html+='<div style="font-size:.88rem;font-weight:500;color:#fff;margin-bottom:2px">'+esc(h.nombre)+'</div>';
+    if(h.desc)html+='<div style="font-size:.74rem;color:var(--dim)">'+esc(h.desc)+'</div>';
+    if(h.resp)html+='<div style="font-size:.7rem;color:var(--dim);margin-top:2px">👤 '+esc(h.resp)+'</div>';
+    html+='</div><div class="acts"><span class="badge '+SM4[h.estado]+'" style="cursor:pointer" onclick="cycleHito('+h.id+')">'+esc(h.estado)+'</span>';
+    html+='<button class="btn btn-o btn-xs" onclick="editHito('+h.id+')">📅</button>';
+    html+='<button class="btn btn-d btn-xs" onclick="delHito('+h.id+')">🗑</button></div></div></div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
+}
+function cycleHito(id){var h=hitos.find(function(x){return x.id===id;});if(!h)return;var o=['pendiente','en proceso','completado'];h.estado=o[(o.indexOf(h.estado)+1)%o.length];saveAll();renderHitos();toast('Hito: '+h.estado,'tinf');}
+function delHito(id){if(!confirm('¿Eliminar hito?'))return;hitos=hitos.filter(function(x){return x.id!==id;});saveAll();renderHitos();}
+function editHito(id){var h=hitos.find(function(x){return x.id===id;});if(!h)return;var d=prompt('Nueva fecha (YYYY-MM-DD):',h.fecha||'');if(d!==null){h.fecha=d;saveAll();renderHitos();toast('📅 Fecha actualizada','tinf');}}
+
+// ─── DOCUMENTOS ───
+function previewDoc(input){
+  var f=input.files[0];if(!f)return;
+  pendDocFile=null;
+  var prev=document.getElementById('doc-preview');
+  prev.innerHTML='<span style="color:var(--tl);font-size:.78rem">⏳ Cargando '+esc(f.name)+'...</span>';
+  var savBtn=document.querySelector('#m-doc .mft .btn-p');
+  if(savBtn)savBtn.disabled=true;
+  var r=new FileReader();
+  r.onload=function(e){
+    pendDocFile={name:f.name,size:f.size,type:f.type,data:e.target.result};
+    prev.innerHTML='<span class="fchip">📎 '+esc(f.name)+' ('+Math.round(f.size/1024)+'KB) <span style="color:#34d399">✓ listo</span></span>';
+    if(!document.getElementById('d-nombre').value.trim())document.getElementById('d-nombre').value=f.name;
+    if(savBtn)savBtn.disabled=false;
+  };
+  r.onerror=function(){prev.innerHTML='<span style="color:#fb7185;font-size:.78rem">⚠ Error leyendo archivo</span>';if(savBtn)savBtn.disabled=false;};
+  r.readAsDataURL(f);
+}
+function saveDoc(){
+  var nombre=document.getElementById('d-nombre').value.trim()||(pendDocFile?pendDocFile.name:'');
+  if(!pendDocFile){toast('⚠ El archivo aún se está cargando o no fue seleccionado. Espera un momento y vuelve a intentar.','terr');return;}
+  if(!nombre){toast('⚠ Ingresa un nombre para el documento','terr');return;}
+  docs.push({id:Date.now(),nombre:nombre,cat:document.getElementById('d-cat').value,rel:document.getElementById('d-rel').value,fecha:new Date().toLocaleDateString('es-CO'),size:pendDocFile.size,data:pendDocFile.data});
+  pendDocFile=null;saveAll();closeM('m-doc');renderDocs();toast('📁 Documento guardado','tok');
+  document.getElementById('doc-preview').innerHTML='';document.getElementById('d-nombre').value='';document.getElementById('d-rel').value='';
+}
+function setDocFilter(f,el){docFilter=f;document.querySelectorAll('#dfilt button').forEach(function(b){b.classList.remove('active');});el.classList.add('active');renderDocs();}
+function renderDocs(){
+  var filtered=docFilter==='all'?docs:docs.filter(function(d){return d.cat===docFilter;});
+  var tb=document.getElementById('doc-body');if(!tb)return;
+  if(!filtered.length){tb.innerHTML='<tr><td colspan="6" class="es">📂 No hay documentos en esta categoría</td></tr>';return;}
+  var CM={informe:'bb',factura:'bok',soporte:'bw',capacitacion:'bb',legal:'bc',otro:'bp'};
+  var html='';
+  filtered.slice().reverse().forEach(function(d){
+    html+='<tr><td style="max-width:220px"><span class="doc-dl" data-id="'+d.id+'" style="color:var(--tl);cursor:pointer">📄 '+esc(d.nombre)+'</span></td>';
+    html+='<td><span class="badge '+(CM[d.cat]||'bp')+'">'+esc(d.cat)+'</span></td>';
+    html+='<td class="mono" style="color:var(--dim)">'+(d.size?Math.round(d.size/1024)+'KB':'—')+'</td>';
+    html+='<td style="font-size:.75rem;color:var(--dim)">'+esc(d.rel||'—')+'</td>';
+    html+='<td class="mono" style="font-size:.7rem;color:var(--dim)">'+esc(d.fecha||'')+'</td>';
+    html+='<td class="acts"><button class="btn btn-p btn-xs doc-dl" data-id="'+d.id+'">⬇</button><button class="btn btn-d btn-xs" onclick="delDoc('+d.id+')">🗑</button></td></tr>';
+  });
+  tb.innerHTML=html;
+  tb.querySelectorAll('.doc-dl').forEach(function(el){
+    el.addEventListener('click',function(){var d=docs.find(function(x){return x.id==el.dataset.id;});if(d)dlFile(d.data,d.nombre);});
+  });
+}
+function delDoc(id){if(!confirm('¿Eliminar documento?'))return;docs=docs.filter(function(d){return d.id!==id;});saveAll();renderDocs();toast('Eliminado','terr');}
+function dlFile(data,name){if(!data||!name)return;var a=document.createElement('a');a.href=data;a.download=name;a.click();}
+
+// ─── INIT ───
+window.addEventListener('DOMContentLoaded',function(){
+  var ts=localStorage.getItem('ds360_ts');
+  if(ts){var el=document.getElementById('sb-saved');if(el)el.textContent=new Date(ts).toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});}
+  nav('dashboard');
+});
+</script>
+</body>
+</html>
